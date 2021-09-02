@@ -8,15 +8,15 @@ from realesrgan import RealESRGANer
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input', type=str, default='inputs', help='Input image or folder')
+    parser.add_argument('--input', type=str, default='inputs/1', help='Input image or folder')
     parser.add_argument(
         '--model_path',
         type=str,
-        default='experiments/pretrained_models/RealESRGAN_x4plus.pth',
+        default='experiments/pretrained_models/RealESRGAN_x2plus.pth',
         help='Path to the pre-trained model')
     parser.add_argument('--output', type=str, default='results', help='Output folder')
-    parser.add_argument('--netscale', type=int, default=4, help='Upsample scale factor of the network')
-    parser.add_argument('--outscale', type=float, default=4, help='The final upsampling scale of the image')
+    parser.add_argument('--netscale', type=int, default=2, help='Upsample scale factor of the network')
+    parser.add_argument('--outscale', type=float, default=2, help='The final upsampling scale of the image')
     parser.add_argument('--suffix', type=str, default='out', help='Suffix of the restored image')
     parser.add_argument('--tile', type=int, default=800, help='Tile size, 0 for no tile during testing')
     parser.add_argument('--tile_pad', type=int, default=10, help='Tile padding')
