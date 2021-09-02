@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>盘点demo</title>
+
+    <script src="/static/jquery.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+</head>
+<style>
+    .scroller-group {
+        width: 100%;
+        background: #c1bcbc;
+        color: white;
+        position: fixed;
+        bottom: 0;
+        opacity: 0.5
+    }
+
+    .col-sm-4 {
+        color: #fff;
+        font-size: 20px;
+        padding-bottom: 5px;
+        padding-top: 5px;
+        width: 40%;
+    }
+
+    #selector {
+        padding: 0px
+    }
+
+    #counter {
+        text-align: center;
+        display: inline-block;
+        padding: 10px;
+        font-size: 25px;
+        font-weight: bolder;
+        background: #2a83ad
+    }
+
+    #box_list {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    * {
+        padding: 0;
+        margin: 0
+    }
+</style>
+<body>
+<div>
+    <input type="file" class="d-none" id="file">
+    <div style="text-align:center">
+        outScale<input id="outScale" value="1" />
+        <button id="selector"> 选择图片</button>
+    </div>
+    <div align="center">
+        <p><img id="origin" src="" style="height:100%;display:inline-block"></p>
+        <p><img id="result" src="" style="height:100%;display:inline-block"></p>
+    </div>
+
+</div>
+<script>
+  $(function () {
+
+    var task;
+
+    $("#selector").click(function () {
+      $("#file").trigger("click");
+    })
+
+    var upload = function(file,ver){
+      var formData = new FormData();
+      formData.append('file', file);
+      formData.append('outScale',$("#outScale").val())
+      $.ajax({
+        url: "/",
+        type: "post",
+        dataType: "json",
+        cache: false,
+        data: formData,
+        processData: false,// 不处理数据
+        contentType: false, // 不设置内容类型
+        success: function (data) {
+            $("#result").attr("src",'')
+            if(data.success){
+                $("#result").attr("src",data.data);
+            }
+        }
+      });
+    }
+
+    $("#file,input[type=radio]").change(function (e) {
+      var file_obj = $("#file")[0];
+      if(file_obj.files.length == 0){
+        alert("请选择图片！");
+        return;
+      }
+      var file = file_obj.files[0];
+      if (!/image\/\w+/.test(file.type)) {
+        alert("看清楚，这个需要图片！");
+        return false;
+      }
+        var reads= new FileReader();
+        reads.readAsDataURL(file);
+        reads.onload=function (e) {
+            $("#origin").attr("src",this.result);
+        };
+      $("#result").attr("src",'')
+      task = null;
+      upload(file,$("input[name='ver']:checked").val());
+    });
+
+    var colors = ['#c69', '#9c6', '#69c'];
+    var boxcolors = ['green', 'red', 'blue']
+
+
+    $("#customRange").change(function (e) {
+      $("#scaleLabel").text(e.target.value)
+    });
+  });
+</script>
+</body>
+</html>
